@@ -6,14 +6,15 @@ import {useDispatch} from '../hooks/useDispatch';
 import {useSelector} from '../hooks/useSelector';
 import {v4} from 'uuid';
 import {notebookSelector, noteSelector} from '../redux/tasksReducer';
-import {NotesStackScreenP} from './types';
+import {EditNoteStackScreenP, NoteParams, NotesStackScreenP} from './types';
 import {jsonToOrg, Note as NoteT} from 'org2json';
 import RNFetchBlob from 'rn-fetch-blob';
 import {directorySelector} from '../redux/directoryReducer';
 import deepClone from 'lodash.clonedeep';
 
-export const Note: FC<NotesStackScreenP<'Note'>> = ({navigation, route}) => {
-  const {notebook, ids, isCreating} = route.params;
+interface Props extends NoteParams, EditNoteStackScreenP<'Note'> {}
+
+export const Note: FC<Props> = ({navigation, notebook, ids, isCreating}) => {
   const colors = useTheme();
   const directory = useSelector(directorySelector);
   const notebookArray = useSelector(notebookSelector(notebook));

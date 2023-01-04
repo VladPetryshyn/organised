@@ -2,9 +2,8 @@ import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Notes} from '../Notes';
 import {Notebook} from '../Notebook';
-import {Note} from '../Note';
-import {AddTags} from '../AddTags';
 import {NotesStackParamList} from '../types';
+import {EditNote} from '../EditNote';
 
 const Stack = createStackNavigator<NotesStackParamList>();
 
@@ -18,8 +17,7 @@ export const Notebooks = () => {
         name="Notebook"
         component={props => <Notebook {...props} />}
       />
-      <Stack.Screen name="Note" component={props => <Note {...props} />} />
-      <Stack.Screen name="AddTags" component={AddTags} />
+      <Stack.Screen name="EditNote" component={EditNote} />
     </Stack.Navigator>
   );
 };

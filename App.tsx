@@ -47,6 +47,7 @@ function App() {
       const oldTagsData = JSON.parse(
         (await AsyncStorage.getItem('tags')) ?? '{}',
       );
+      console.log('old', oldTagsData);
       if (dir && (await checkPermissions())) {
         dispatch(setDirectory(dir));
         const newHashes = await getHashes(dir);
@@ -58,7 +59,10 @@ function App() {
         dispatch(initializeTags(oldTagsData));
 
         if (filtredHashes.length > 0) {
-          const {noteData, tagsData} = await getUpdatedData(dir, filtredHashes);
+          const {noteData, tagsData} = await getUpdatedData(
+            dir,
+            Object.keys(oldHashes),
+          );
           dispatch(onFilesUpdateTags(tagsData));
           dispatch(changeNote({data: noteData, action: updateNotebooks}));
         }
@@ -80,6 +84,7 @@ function App() {
         const {notes, tags} = await getFile(`${directory}/${name}.org`);
         const data = {[name]: notes};
 
+        console.log('updating motehrfucker');
         dispatch(onFilesUpdateTags({notebooks: {[name]: tags}, count: {}}));
         dispatch(changeNote({data, action: updateNotebooks}));
       });

@@ -2,13 +2,13 @@ import React, {FC, useMemo, useState} from 'react';
 import {FlatList, StyleSheet, TextInput, TouchableOpacity} from 'react-native';
 import {Appbar, Checkbox, Text, useTheme} from 'react-native-paper';
 import {Container} from '../../components/Container';
-import {NotesStackScreenP} from '../types';
+import {EditNoteStackScreenP} from '../types';
 import {useToggle} from '../../hooks/useToggle';
 import {CreateTagModal} from './CreateTagModal';
 import {useSelector} from '../../hooks/useSelector';
 import {tagsNameSelector} from '../../redux/tagsReducer';
 
-export const AddTags: FC<NotesStackScreenP<'AddTags'>> = ({navigation}) => {
+export const AddTags: FC<EditNoteStackScreenP<'AddTags'>> = ({navigation}) => {
   const {colors} = useTheme();
   const color = useMemo(() => (colors.dark ? '#fff' : '#000'), [colors]);
   const [tag, setTag] = useState('');
@@ -18,7 +18,7 @@ export const AddTags: FC<NotesStackScreenP<'AddTags'>> = ({navigation}) => {
   return (
     <Container>
       <Appbar.Header>
-        <Appbar.BackAction onPress={() => navigation.navigate('Note')} />
+        <Appbar.BackAction onPress={navigation.goBack} />
         <TextInput
           placeholder="Enter tag name"
           style={[styles.search, {color}]}

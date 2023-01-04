@@ -69,7 +69,7 @@ export const Notebook: FC<NotesStackScreenP<'Notebook'>> = ({
               {...item}
               ids={[item?.properties?.id]}
               notebook={notebook}
-              navigate={navigation.push}
+              navigate={navigation.navigate}
               setSelectedNotes={setSelectedNotes}
               selectedNotes={selectedNotes}
             />

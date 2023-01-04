@@ -3,13 +3,17 @@ import React, {Dispatch, FC, SetStateAction, useState} from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Autolink from 'react-native-autolink';
 import {Card, Chip, Divider, Paragraph, Title} from 'react-native-paper';
-import {DrawerParamList, NoteParams} from '../screens/types';
+import {
+  DrawerParamList,
+  NoteParams,
+  NotesStackParamList,
+} from '../screens/types';
 import {compareArrays} from '../utils/compareArrays';
 
 interface Props extends Note {
   ids: Array<string>;
   notebook: string;
-  navigate: (screen: keyof DrawerParamList, args: NoteParams) => void;
+  navigate: (screen: keyof NotesStackParamList, args: NoteParams) => void;
   setSelectedNotes: Dispatch<SetStateAction<Array<string[]>>>;
   selectedNotes: Array<Array<string>>;
 }
@@ -29,7 +33,7 @@ export const NoteCard: FC<Props> = ({
   const isInSelectionMode = selectedNotes.length > 0;
   const [isSelected, setIsSelected] = useState(false);
   const goToNote = () => {
-    navigate('Note', {ids, notebook});
+    navigate('EditNote', {ids, notebook});
   };
   const selectNote = () => {
     if (!isSelected) {
@@ -67,7 +71,9 @@ export const NoteCard: FC<Props> = ({
           )}
           <View style={styles.chips}>
             {tags.map(tag => (
-              <Chip style={styles.chip}>{tag}</Chip>
+              <Chip style={styles.chip} key={tag}>
+                {tag}
+              </Chip>
             ))}
           </View>
           <FlatList
