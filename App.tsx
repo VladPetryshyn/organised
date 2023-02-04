@@ -18,11 +18,6 @@ import {
 } from './redux/tasksReducer';
 import {ActivityIndicator, Text} from 'react-native-paper';
 import {getFile} from './utils/getFile';
-import {
-  changeTags,
-  initializeTags,
-  onFilesUpdateTags,
-} from './redux/tagsReducer';
 import {LogBox} from 'react-native';
 import {checkPermissions} from './utils/askPermission';
 
@@ -44,10 +39,6 @@ function App() {
       const notebooksData = JSON.parse(
         (await AsyncStorage.getItem('notes')) ?? '{}',
       );
-      const oldTagsData = JSON.parse(
-        (await AsyncStorage.getItem('tags')) ?? '{}',
-      );
-      console.log('old', oldTagsData);
       if (dir && (await checkPermissions())) {
         dispatch(setDirectory(dir));
         const newHashes = await getHashes(dir);
@@ -56,14 +47,9 @@ function App() {
         const filtredHashes = Object.keys(newHashes).filter(
           notebook => oldHashes[notebook] !== newHashes[notebook],
         );
-        dispatch(initializeTags(oldTagsData));
 
         if (filtredHashes.length > 0) {
-          const {noteData, tagsData} = await getUpdatedData(
-            dir,
-            Object.keys(oldHashes),
-          );
-          dispatch(onFilesUpdateTags(tagsData));
+          const {noteData} = await getUpdatedData(dir, Object.keys(oldHashes));
           dispatch(changeNote({data: noteData, action: updateNotebooks}));
         }
       }
@@ -81,11 +67,10 @@ function App() {
 
       eventListener = eventEmitter.addListener('FileChanged', async event => {
         const name = event.name.replace('.org', '');
-        const {notes, tags} = await getFile(`${directory}/${name}.org`);
+        const {notes} = await getFile(`${directory}/${name}.org`);
         const data = {[name]: notes};
 
         console.log('updating motehrfucker');
-        dispatch(onFilesUpdateTags({notebooks: {[name]: tags}, count: {}}));
         dispatch(changeNote({data, action: updateNotebooks}));
       });
     }

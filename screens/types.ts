@@ -45,17 +45,9 @@ export type SettingsStackScreenP<N extends keyof SettingsStackParamList> =
 export type NotesStackParamList = {
   Notebook: {name: string};
   Notebooks: undefined;
-  EditNote: NoteParams;
+  Note: NoteParams;
+  Search: undefined;
 };
 
 export type NotesStackScreenP<N extends keyof NotesStackParamList> =
   StackScreenProps<NotesStackParamList, N>;
-
-// EditNote
-export type EditNoteStackParamList = {
-  Note: undefined;
-  AddTags: undefined;
-};
-
-export type EditNoteStackScreenP<N extends keyof EditNoteStackParamList> =
-  StackScreenProps<EditNoteStackParamList, N>;

@@ -14,8 +14,9 @@ interface Props extends Note {
   ids: Array<string>;
   notebook: string;
   navigate: (screen: keyof NotesStackParamList, args: NoteParams) => void;
-  setSelectedNotes: Dispatch<SetStateAction<Array<string[]>>>;
-  selectedNotes: Array<Array<string>>;
+  setSelectedNotes?: Dispatch<SetStateAction<Array<string[]>>>;
+  selectedNotes?: Array<Array<string>>;
+  isInSearch?: boolean;
 }
 
 export const NoteCard: FC<Props> = ({
@@ -29,21 +30,24 @@ export const NoteCard: FC<Props> = ({
   navigate,
   setSelectedNotes,
   selectedNotes,
+  isInSearch,
 }) => {
-  const isInSelectionMode = selectedNotes.length > 0;
+  const isInSelectionMode = selectedNotes!.length > 0;
   const [isSelected, setIsSelected] = useState(false);
   const goToNote = () => {
-    navigate('EditNote', {ids, notebook});
+    navigate('Note', {ids, notebook, isCreating: false});
   };
   const selectNote = () => {
-    if (!isSelected) {
-      setSelectedNotes(notes => [...notes, ids]);
-      setIsSelected(true);
-    } else {
-      setSelectedNotes(notes =>
-        notes.filter(note => !compareArrays(note, ids)),
-      );
-      setIsSelected(false);
+    if (!isInSearch) {
+      if (!isSelected) {
+        setSelectedNotes!(notes => [...notes, ids]);
+        setIsSelected(true);
+      } else {
+        setSelectedNotes!(notes =>
+          notes.filter(note => !compareArrays(note, ids)),
+        );
+        setIsSelected(false);
+      }
     }
   };
   return (
@@ -55,7 +59,7 @@ export const NoteCard: FC<Props> = ({
           styles.notebook,
           {
             backgroundColor:
-              isSelected && selectedNotes.length > 0 ? 'red' : 'white',
+              isSelected && selectedNotes?.length > 0 ? 'red' : 'white',
           },
         ]}>
         <Card.Content>

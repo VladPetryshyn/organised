@@ -245,6 +245,9 @@ export const {
   deleteNotebookAC,
 } = tasksSlice.actions;
 
+export const selectAllNotebooksData = (state: RootState) =>
+  state.tasksReducer.data;
+
 export const notebookSelector = (notebook: string) => (state: RootState) =>
   state.tasksReducer.data[notebook];
 

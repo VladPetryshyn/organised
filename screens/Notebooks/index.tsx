@@ -3,7 +3,8 @@ import {createStackNavigator} from '@react-navigation/stack';
 import {Notes} from '../Notes';
 import {Notebook} from '../Notebook';
 import {NotesStackParamList} from '../types';
-import {EditNote} from '../EditNote';
+import {Search} from '../Search';
+import {Note} from '../Note';
 
 const Stack = createStackNavigator<NotesStackParamList>();
 
@@ -13,11 +14,9 @@ export const Notebooks = () => {
       screenOptions={{headerShown: false}}
       initialRouteName="Notebooks">
       <Stack.Screen name="Notebooks" component={Notes} />
-      <Stack.Screen
-        name="Notebook"
-        component={props => <Notebook {...props} />}
-      />
-      <Stack.Screen name="EditNote" component={EditNote} />
+      <Stack.Screen name="Notebook" component={Notebook} />
+      <Stack.Screen name="Search" component={Search} />
+      <Stack.Screen name="Note" component={Note} />
     </Stack.Navigator>
   );
 };

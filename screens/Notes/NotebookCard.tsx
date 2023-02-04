@@ -7,25 +7,27 @@ import {DrawerParamList} from '../types';
 interface Props {
   name: string;
   navigation: StackNavigationProp<DrawerParamList, 'Notebooks'>;
-  selectedNotebooks: Array<string>;
-  setSelectedNotebooks: React.Dispatch<React.SetStateAction<string[]>>;
+  selectedNotebooks?: Array<string>;
+  setSelectedNotebooks?: React.Dispatch<React.SetStateAction<string[]>>;
+  isInSearch?: boolean;
 }
 
 export const NotebookCard: FC<Props> = ({
   navigation,
   name,
-  selectedNotebooks,
+  selectedNotebooks = [],
   setSelectedNotebooks,
+  isInSearch,
 }) => {
   const [isSelected, setIsSelected] = useState(false);
-  const isInSelectionMode = selectedNotebooks.length > 0;
+  const isInSelectionMode = selectedNotebooks?.length > 0;
 
   const selectNotebook = () => {
     if (!isSelected) {
-      setSelectedNotebooks(notes => [...notes, name]);
+      setSelectedNotebooks!(notes => [...notes, name]);
       setIsSelected(true);
     } else {
-      setSelectedNotebooks(notes => notes.filter(note => note === name));
+      setSelectedNotebooks!(notes => notes.filter(note => note === name));
       setIsSelected(false);
     }
   };
@@ -37,7 +39,7 @@ export const NotebookCard: FC<Props> = ({
           ? selectNotebook
           : () => navigation.navigate('Notebook', {name})
       }
-      onLongPress={selectNotebook}>
+      onLongPress={isInSearch ? selectNotebook : () => undefined}>
       <Card
         style={[
           styles.notebook,

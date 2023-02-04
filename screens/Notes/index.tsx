@@ -36,6 +36,10 @@ export const Notes: FC<NotesStackScreenP<'Notebooks'>> = ({navigation}) => {
       <Appbar.Header>
         <Appbar.Action icon="menu" onPress={navigation.openDrawer} />
         <Appbar.Content title="Notebooks" />
+        <Appbar.Action
+          icon="magnify"
+          onPress={() => navigation.navigate('Search')}
+        />
       </Appbar.Header>
       <FlatList
         data={keys}

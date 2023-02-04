@@ -2,24 +2,21 @@ import React, {FC, useEffect, useMemo, useState} from 'react';
 import {ScrollView, StyleSheet, TextInput} from 'react-native';
 import {Appbar, useTheme} from 'react-native-paper';
 import {Container} from '../components/Container';
-import {useDispatch} from '../hooks/useDispatch';
 import {useSelector} from '../hooks/useSelector';
 import {v4} from 'uuid';
 import {notebookSelector, noteSelector} from '../redux/tasksReducer';
-import {EditNoteStackScreenP, NoteParams, NotesStackScreenP} from './types';
+import {NotesStackScreenP} from './types';
 import {jsonToOrg, Note as NoteT} from 'org2json';
 import RNFetchBlob from 'rn-fetch-blob';
 import {directorySelector} from '../redux/directoryReducer';
 import deepClone from 'lodash.clonedeep';
 
-interface Props extends NoteParams, EditNoteStackScreenP<'Note'> {}
-
-export const Note: FC<Props> = ({navigation, notebook, ids, isCreating}) => {
+export const Note: FC<NotesStackScreenP<'Note'>> = ({navigation, route}) => {
+  const {notebook, ids, isCreating} = route.params;
   const colors = useTheme();
   const directory = useSelector(directorySelector);
   const notebookArray = useSelector(notebookSelector(notebook));
   const color = useMemo(() => (colors.dark ? '#fff' : '#000'), [colors]);
-  const dispatch = useDispatch();
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const noteData = useSelector(
@@ -136,10 +133,6 @@ export const Note: FC<Props> = ({navigation, notebook, ids, isCreating}) => {
         />
       </ScrollView>
       <Appbar>
-        <Appbar.Action
-          icon="tag-outline"
-          onPress={() => navigation.navigate('AddTags')}
-        />
         <Appbar.Action icon="plus-box-outline" />
       </Appbar>
     </Container>

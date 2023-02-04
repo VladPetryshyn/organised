@@ -109,6 +109,7 @@ export const Notebook: FC<NotesStackScreenP<'Notebook'>> = ({
           onPress={() =>
             navigation.navigate('Note', {
               notebook,
+              isCreating: true,
             })
           }
         />

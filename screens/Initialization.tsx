@@ -12,7 +12,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import {initializeTasks} from '../redux/tasksReducer';
 import {getFiles} from '../utils/getFiles';
 import {decodeUriToDir} from '../utils/decodeUriToDir';
-import {changeTags, initializeTags} from '../redux/tagsReducer';
 import {CustomModal} from '../components/Modal';
 import allFilesAccessRequest from '../native/allFilesAccessRequest';
 import {useToggle} from '../hooks/useToggle';
@@ -29,11 +28,9 @@ export const Initialization: FC<StackScreenP<'Initialization'>> = () => {
     const hashes = await getHashes(dir);
     await AsyncStorage.setItem('hashes', JSON.stringify(hashes));
 
-    const {notesData, tagsData} = await getFiles(dir);
+    const {notesData} = await getFiles(dir);
     await AsyncStorage.setItem('notes', JSON.stringify(notesData));
     dispatch(initializeTasks(notesData));
-
-    dispatch(changeTags({tagsData, action: initializeTags}));
 
     await changeDirectory(dispatch)(dir);
     toggleIsLoading();
