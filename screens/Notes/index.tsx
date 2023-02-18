@@ -1,4 +1,5 @@
 import React, {FC, useState} from 'react';
+import {useTranslation} from 'react-i18next';
 import {FlatList, StyleSheet, View} from 'react-native';
 import {Appbar, Button, Text} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
@@ -18,6 +19,7 @@ const BOTTOM_APPBAR_HEIGHT = 50;
 export const Notes: FC<NotesStackScreenP<'Notebooks'>> = ({navigation}) => {
   const keys = useSelector(keysSelector);
   const dispatch = useDispatch();
+  const {t} = useTranslation();
   const [selectedNotebooks, setSelectedNotebooks] = useState<Array<string>>([]);
   const {state: isVisible, toggle: toggleIsVisible} = useToggle(false);
   const {state: isModalVisible, toggle: toggleIsModalVisible} =
@@ -35,7 +37,7 @@ export const Notes: FC<NotesStackScreenP<'Notebooks'>> = ({navigation}) => {
     <Container>
       <Appbar.Header>
         <Appbar.Action icon="menu" onPress={navigation.openDrawer} />
-        <Appbar.Content title="Notebooks" />
+        <Appbar.Content title={t('notebooks')} />
         <Appbar.Action
           icon="magnify"
           onPress={() => navigation.navigate('Search')}

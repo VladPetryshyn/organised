@@ -1,4 +1,5 @@
 import RNFetchBlob from 'rn-fetch-blob';
+import {getHash} from './getHash';
 
 export const getHashes = async (dir: string) => {
   const items = await RNFetchBlob.fs.ls(dir);
@@ -9,7 +10,7 @@ export const getHashes = async (dir: string) => {
       continue;
     }
 
-    hashes[file.replace('.org', '')] = await RNFetchBlob.fs.hash(f, 'sha1');
+    hashes[file.replace('.org', '')] = await getHash(f);
   }
 
   return hashes;

@@ -13,11 +13,15 @@ const themeSlice = createSlice({
     changeTheme: (_, action: PayloadAction<typeof initialState>) => {
       return action.payload;
     },
+    toggleIsDarkTheme: state => {
+      state.isDark = !state.isDark;
+    },
   },
 });
 
-export const {changeTheme} = themeSlice.actions;
+export const {changeTheme, toggleIsDarkTheme} = themeSlice.actions;
 
 export const themeSelector = (state: RootState) => state.themeReducer;
+export const isDarkSelector = (state: RootState) => state.themeReducer.isDark;
 
 export default themeSlice.reducer;

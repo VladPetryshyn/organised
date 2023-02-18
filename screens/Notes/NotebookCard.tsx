@@ -1,7 +1,7 @@
 import {StackNavigationProp} from '@react-navigation/stack';
 import React, {FC, useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
-import {Card, Title} from 'react-native-paper';
+import {Card, Title, useTheme} from 'react-native-paper';
 import {DrawerParamList} from '../types';
 
 interface Props {
@@ -20,6 +20,8 @@ export const NotebookCard: FC<Props> = ({
   isInSearch,
 }) => {
   const [isSelected, setIsSelected] = useState(false);
+  const theme = useTheme();
+
   const isInSelectionMode = selectedNotebooks?.length > 0;
 
   const selectNotebook = () => {
@@ -27,10 +29,11 @@ export const NotebookCard: FC<Props> = ({
       setSelectedNotebooks!(notes => [...notes, name]);
       setIsSelected(true);
     } else {
-      setSelectedNotebooks!(notes => notes.filter(note => note === name));
+      setSelectedNotebooks!(notes => notes.filter(note => note !== name));
       setIsSelected(false);
     }
   };
+  console.log(selectedNotebooks);
 
   return (
     <TouchableOpacity
@@ -39,11 +42,15 @@ export const NotebookCard: FC<Props> = ({
           ? selectNotebook
           : () => navigation.navigate('Notebook', {name})
       }
-      onLongPress={isInSearch ? selectNotebook : () => undefined}>
+      onLongPress={!isInSearch ? selectNotebook : () => undefined}>
       <Card
         style={[
           styles.notebook,
-          {backgroundColor: isSelected ? 'red' : 'white'},
+          {
+            backgroundColor: isSelected
+              ? theme.colors.primary
+              : theme.colors.background,
+          },
         ]}>
         <Card.Content>
           <Title>{name}</Title>

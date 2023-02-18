@@ -7,7 +7,6 @@ import {
 } from '@reduxjs/toolkit';
 import {jsonToOrg, Note, Notes} from 'org2json';
 import {getHashes} from '../utils/getHashes';
-import {indexOf} from '../utils/indexOf';
 import {DirectoryState} from './directoryReducer';
 import {RootState} from './mainReducer';
 import cloneDeep from 'lodash.clonedeep';

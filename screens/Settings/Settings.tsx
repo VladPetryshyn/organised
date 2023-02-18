@@ -1,5 +1,6 @@
 import {DrawerActions} from '@react-navigation/native';
 import React, {FC} from 'react';
+import {useTranslation} from 'react-i18next';
 import {TouchableOpacity} from 'react-native';
 import {Appbar, List} from 'react-native-paper';
 import {Container} from '../../components/Container';
@@ -8,6 +9,7 @@ import {SettingsStackScreenP} from '../types';
 export const Settings: FC<SettingsStackScreenP<'Settings'>> = ({
   navigation,
 }) => {
+  const {t} = useTranslation();
   return (
     <Container>
       <Appbar.Header>
@@ -15,26 +17,26 @@ export const Settings: FC<SettingsStackScreenP<'Settings'>> = ({
           icon="menu"
           onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
         />
-        <Appbar.Content title="Settings" />
+        <Appbar.Content title={t('settings')} />
       </Appbar.Header>
       <TouchableOpacity>
         <List.Item
-          title="Styling"
-          description="Change theme, and primary color"
+          title={t('styling')}
+          description={t('styling_desc')}
           left={props => <List.Icon {...props} icon="brush" />}
           onPress={() => navigation.navigate('Styling')}
         />
       </TouchableOpacity>
       <TouchableOpacity onPress={() => navigation.navigate('Language')}>
         <List.Item
-          title="Language"
-          description="Change application main language"
+          title={t('language')}
+          description={t('language_desc')}
           left={props => <List.Icon {...props} icon="translate" />}
         />
       </TouchableOpacity>
       <TouchableOpacity>
         <List.Item
-          title="Info"
+          title={t('info')}
           left={props => <List.Icon {...props} icon="information-outline" />}
         />
       </TouchableOpacity>

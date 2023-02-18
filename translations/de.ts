@@ -6,4 +6,7 @@ export default {
   styling_desc: 'Thema und Grundfarbe ändern',
   language_desc: 'Sprache ändern Hauptsprache',
   notebooks: 'Notizbücher',
+  dark_theme: 'Dunkles Thema',
+  accent_color: 'Akzentfarbe',
+  accent_color_desc: 'Drücken, um die Akzentfarbe zu ändern',
 };

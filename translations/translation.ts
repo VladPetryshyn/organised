@@ -6,7 +6,11 @@ import * as RNLocalize from 'react-native-localize';
 import i18n, {LanguageDetectorAsyncModule} from 'i18next';
 import {initReactI18next} from 'react-i18next';
 
-const languages = {en, de, uk};
+const languages = {
+  en: {translation: en},
+  de: {translation: de},
+  uk: {translation: uk},
+};
 const language_codes = Object.keys(languages);
 
 const LANGUAGE_DETECTOR: LanguageDetectorAsyncModule = {
@@ -38,6 +42,7 @@ i18n
   .use(LANGUAGE_DETECTOR)
   .use(initReactI18next)
   .init({
+    compatibilityJSON: 'v3',
     resources: languages,
     react: {
       useSuspense: false,

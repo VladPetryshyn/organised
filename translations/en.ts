@@ -6,4 +6,7 @@ export default {
   styling_desc: 'Change theme and, primary color',
   language_desc: 'Change application main language',
   notebooks: 'Notebooks',
+  dark_theme: 'Dark Theme',
+  accent_color: 'Accent color',
+  accent_color_desc: 'Press to change accent color',
 };

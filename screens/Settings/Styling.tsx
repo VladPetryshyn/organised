@@ -12,28 +12,41 @@ import {useToggle} from '../../hooks/useToggle';
 import {SettingsStackScreenP} from '../types';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {CustomModal} from '../../components/Modal';
+import {useTranslation} from 'react-i18next';
+import {useDispatch} from '../../hooks/useDispatch';
+import {isDarkSelector, toggleIsDarkTheme} from '../../redux/themeReducer';
+import {useSelector} from '../../hooks/useSelector';
 
 export const StylingSettings: FC<SettingsStackScreenP<'Styling'>> = ({
   navigation,
 }) => {
   const {state: isModalShown, toggle: toggleModalShown} = useToggle();
+  const isDark = useSelector(isDarkSelector);
+  const dispatch = useDispatch();
   const {colors} = useTheme();
+  const {t} = useTranslation();
+  const toggleIsDark = () => void dispatch(toggleIsDarkTheme());
+
   return (
     <Container>
       <Appbar.Header>
         <Appbar.BackAction onPress={navigation.goBack} />
-        <Appbar.Content title="Styling" />
+        <Appbar.Content title={t('styling')} />
       </Appbar.Header>
       <TouchableWithoutFeedback>
         <View style={styles.switchContainer}>
-          <Text variant="titleSmall">Dark Theme</Text>
-          <Switch value={true} style={styles.switch} />
+          <Text variant="titleSmall">{t('dark_theme')}</Text>
+          <Switch
+            value={isDark}
+            style={styles.switch}
+            onChange={toggleIsDark}
+          />
         </View>
       </TouchableWithoutFeedback>
       <TouchableOpacity onPress={toggleModalShown}>
         <List.Item
-          title="Accent color"
-          description="Press to change accent color"
+          title={t('accent_color')}
+          description={t('accent_color_desc')}
           left={() => (
             <View style={[styles.color, {backgroundColor: colors.primary}]} />
           )}

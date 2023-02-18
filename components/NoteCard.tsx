@@ -2,7 +2,14 @@ import {Note} from 'org2json';
 import React, {Dispatch, FC, SetStateAction, useState} from 'react';
 import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
 import Autolink from 'react-native-autolink';
-import {Card, Chip, Divider, Paragraph, Title} from 'react-native-paper';
+import {
+  Card,
+  Chip,
+  Divider,
+  Paragraph,
+  Title,
+  useTheme,
+} from 'react-native-paper';
 import {
   DrawerParamList,
   NoteParams,
@@ -37,6 +44,7 @@ export const NoteCard: FC<Props> = ({
   const goToNote = () => {
     navigate('Note', {ids, notebook, isCreating: false});
   };
+  const theme = useTheme();
   const selectNote = () => {
     if (!isInSearch) {
       if (!isSelected) {
@@ -59,7 +67,9 @@ export const NoteCard: FC<Props> = ({
           styles.notebook,
           {
             backgroundColor:
-              isSelected && selectedNotes?.length > 0 ? 'red' : 'white',
+              isSelected && selectedNotes?.length > 0
+                ? theme.colors.primary
+                : theme.colors.background,
           },
         ]}>
         <Card.Content>

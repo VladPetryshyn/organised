@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import RNFetchBlob from 'rn-fetch-blob';
 import {setDirectory} from '../redux/directoryReducer';
 import {Dispatch} from '../redux/mainReducer';
 

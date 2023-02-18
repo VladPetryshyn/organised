@@ -17,10 +17,13 @@ import allFilesAccessRequest from '../native/allFilesAccessRequest';
 import {useToggle} from '../hooks/useToggle';
 
 export const Initialization: FC<StackScreenP<'Initialization'>> = () => {
+  // hooks
   const [isModalVisible, setIsModalVisible] = useState(true);
   const {state: isLoading, toggle: toggleIsLoading} = useToggle(false);
   const appState = useRef(AppState.currentState);
   const dispatch = useDispatch();
+
+  // functions
   const pick = async () => {
     const dir = decodeUriToDir((await DocumentPicker.pickDirectory())!.uri);
 
@@ -36,13 +39,13 @@ export const Initialization: FC<StackScreenP<'Initialization'>> = () => {
     toggleIsLoading();
   };
 
+  // effects
   useEffect(() => {
     const check = async () => {
       setIsModalVisible(!(await checkPermissions()));
     };
     check();
   }, []);
-
   useEffect(() => {
     const subscription = AppState.addEventListener(
       'change',
@@ -63,9 +66,6 @@ export const Initialization: FC<StackScreenP<'Initialization'>> = () => {
     };
   }, []);
 
-  const openSettings = async () => {
-    allFilesAccessRequest.openAllFilesPermission();
-  };
   return (
     <Container style={styles.container}>
       {isLoading ? (
@@ -91,7 +91,9 @@ export const Initialization: FC<StackScreenP<'Initialization'>> = () => {
                   onPress={BackHandler.exitApp}>
                   Cancel
                 </Button>
-                <Button style={styles.modalButton} onPress={openSettings}>
+                <Button
+                  style={styles.modalButton}
+                  onPress={allFilesAccessRequest.openAllFilesPermission}>
                   OK
                 </Button>
               </View>

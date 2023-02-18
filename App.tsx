@@ -16,7 +16,7 @@ import {
   initializeTasks,
   changeNote,
 } from './redux/tasksReducer';
-import {ActivityIndicator, Text} from 'react-native-paper';
+import {ActivityIndicator} from 'react-native-paper';
 import {getFile} from './utils/getFile';
 import {LogBox} from 'react-native';
 import {checkPermissions} from './utils/askPermission';

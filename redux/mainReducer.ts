@@ -1,4 +1,4 @@
-import { configureStore } from '@reduxjs/toolkit';
+import {configureStore} from '@reduxjs/toolkit';
 import directoryReducer from './directoryReducer';
 import tasksReducer from './tasksReducer';
 import themeReducer from './themeReducer';

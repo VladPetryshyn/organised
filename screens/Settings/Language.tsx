@@ -1,9 +1,10 @@
 import React, {FC, useState} from 'react';
-import {StyleSheet} from 'react-native';
-import {Appbar, Searchbar} from 'react-native-paper';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {Appbar, Searchbar, Text} from 'react-native-paper';
 import {Container} from '../../components/Container';
 import {useToggle} from '../../hooks/useToggle';
 import {SettingsStackScreenP} from '../types';
+import {useTranslation} from 'react-i18next';
 
 const languageOptions = [
   {code: 'uk', label: 'Українська'},
@@ -15,6 +16,7 @@ export const LanguageSettings: FC<SettingsStackScreenP<'Language'>> = ({
   navigation,
 }) => {
   const [search, setSearch] = useState('');
+  const {t, i18n} = useTranslation();
   const {state: isSearching, toggle: toggleIsSearching} = useToggle(false);
   const changeSearch = (s: string) => setSearch(s);
   const stopSearching = () => {
@@ -25,7 +27,7 @@ export const LanguageSettings: FC<SettingsStackScreenP<'Language'>> = ({
     <Container>
       <Appbar.Header>
         {!isSearching && <Appbar.BackAction onPress={navigation.goBack} />}
-        {!isSearching && <Appbar.Content title="Language" />}
+        {!isSearching && <Appbar.Content title={t('language')} />}
         {isSearching && (
           <Searchbar
             placeholder="Search"
@@ -37,6 +39,16 @@ export const LanguageSettings: FC<SettingsStackScreenP<'Language'>> = ({
         )}
         {<Appbar.Action icon="magnify" onPress={toggleIsSearching} />}
       </Appbar.Header>
+      <View style={styles.List}>
+        {languageOptions.map(({code, label}) => (
+          <Text
+            variant="headlineSmall"
+            style={styles.Text}
+            onPress={() => i18n.changeLanguage(code)}>
+            {label}
+          </Text>
+        ))}
+      </View>
     </Container>
   );
 };
@@ -45,5 +57,11 @@ const styles = StyleSheet.create({
   Searchbar: {
     backgroundColor: 'transparent',
     shadowColor: 'transparent',
+  },
+  List: {
+    paddingLeft: 20,
+  },
+  Text: {
+    paddingTop: 10,
   },
 });

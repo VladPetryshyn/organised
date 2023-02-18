@@ -1,10 +1,15 @@
+import './translations/translation';
 import 'react-native-get-random-values';
 import 'react-native-gesture-handler';
 import * as React from 'react';
 import {AppRegistry} from 'react-native';
 import App from './App';
 import {name as appName} from './app.json';
-import {NavigationContainer} from '@react-navigation/native';
+import {
+  DarkTheme,
+  DefaultTheme,
+  NavigationContainer,
+} from '@react-navigation/native';
 import {
   MD3DarkTheme,
   MD3LightTheme,
@@ -19,9 +24,7 @@ import {themeSelector} from './redux/themeReducer';
 const Main = () => {
   return (
     <Provider store={store}>
-      <NavigationContainer dark={true}>
-        <ThemedMain />
-      </NavigationContainer>
+      <ThemedMain />
     </Provider>
   );
 };
@@ -35,7 +38,6 @@ const ThemedMain = () => {
         ...MD3LightTheme.colors,
         primary: theme.primary,
         primaryContainer: theme.primary,
-        onPrimary: theme.primary,
         // onPrimaryContainer: theme.primary,
       },
     }),
@@ -48,20 +50,20 @@ const ThemedMain = () => {
         ...MD3DarkTheme.colors,
         primary: theme.primary,
         primaryContainer: theme.primary,
-        onPrimary: theme.primary,
-        onPrimaryContainer: theme.primary,
-        secondary: theme.primary,
-        onSecondary: theme.primary,
-        onSecondaryContainer: theme.primary,
       },
     }),
     [theme],
   );
 
   return (
-    <PaperProvider theme={themeLight}>
-      <App />
-    </PaperProvider>
+    <NavigationContainer
+      theme={{
+        ...DarkTheme,
+      }}>
+      <PaperProvider theme={theme.isDark ? themeDark : themeLight}>
+        <App />
+      </PaperProvider>
+    </NavigationContainer>
   );
 };
 
