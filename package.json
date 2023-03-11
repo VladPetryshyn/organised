@@ -1,6 +1,7 @@
 {
   "name": "organised",
   "version": "0.0.1",
+  "license": "GPLv3",
   "private": true,
   "scripts": {
     "android": "react-native run-android",
