@@ -1,11 +1,10 @@
 import React, {FC, useState} from 'react';
 import {useTranslation} from 'react-i18next';
-import {FlatList, StyleSheet, View} from 'react-native';
-import {Appbar, Button, Text} from 'react-native-paper';
+import {FlatList, StyleSheet} from 'react-native';
+import {Appbar} from 'react-native-paper';
 import {useSafeAreaInsets} from 'react-native-safe-area-context';
 import {Container} from '../../components/Container';
 import {CustomFAB} from '../../components/FAB';
-import {CustomModal} from '../../components/Modal';
 import {useDispatch} from '../../hooks/useDispatch';
 import {useSelector} from '../../hooks/useSelector';
 import {useToggle} from '../../hooks/useToggle';
@@ -13,8 +12,7 @@ import {deleteNotebook, keysSelector} from '../../redux/tasksReducer';
 import {NotesStackScreenP} from '../types';
 import {AddNoteModal} from './AddNoteModal';
 import {NotebookCard} from './NotebookCard';
-
-const BOTTOM_APPBAR_HEIGHT = 50;
+import {NotesDeleteModal} from './NotesDeleteModal';
 
 export const Notes: FC<NotesStackScreenP<'Notebooks'>> = ({navigation}) => {
   const keys = useSelector(keysSelector);
@@ -30,6 +28,7 @@ export const Notes: FC<NotesStackScreenP<'Notebooks'>> = ({navigation}) => {
     for (const notebook of selectedNotebooks) {
       dispatch(deleteNotebook({notebook}));
     }
+    setSelectedNotebooks([]);
     toggleIsModalVisible();
   };
 
@@ -57,9 +56,7 @@ export const Notes: FC<NotesStackScreenP<'Notebooks'>> = ({navigation}) => {
       />
       <AddNoteModal isVisible={isVisible} toggleIsVisible={toggleIsVisible} />
       {selectedNotebooks.length > 0 && (
-        <Appbar
-          style={[styles.bottomAppbar, {height: BOTTOM_APPBAR_HEIGHT}]}
-          safeAreaInsets={{bottom}}>
+        <Appbar style={styles.bottomAppbar} safeAreaInsets={{bottom}}>
           <Appbar.Content title="" />
           <Appbar.Action icon="delete-outline" onPress={toggleIsModalVisible} />
         </Appbar>
@@ -73,26 +70,12 @@ export const Notes: FC<NotesStackScreenP<'Notebooks'>> = ({navigation}) => {
           setSelectedNotebooks={setSelectedNotebooks}
         />
       )}
-      <CustomModal visible={isModalVisible} onDismiss={toggleIsModalVisible}>
-        <Text variant="headlineSmall">
-          Are you sure that you want to delete {selectedNotebooks.length}{' '}
-          notebooks?
-        </Text>
-        <View style={styles.modalButtons}>
-          <Button
-            mode="text"
-            style={styles.modalCancel}
-            onPress={toggleIsModalVisible}>
-            Cancel
-          </Button>
-          <Button
-            mode="text"
-            style={styles.modalSubmit}
-            onPress={deleteNotebooks}>
-            OK
-          </Button>
-        </View>
-      </CustomModal>
+      <NotesDeleteModal
+        isModalVisible={isModalVisible}
+        toggleIsModalVisible={toggleIsModalVisible}
+        deleteNotebooks={deleteNotebooks}
+        selectedNotebooks={selectedNotebooks}
+      />
     </Container>
   );
 };
@@ -102,7 +85,7 @@ const styles = StyleSheet.create({
     padding: 15,
     paddingBottom: 20,
   },
-  bottomAppbar: {},
+  bottomAppbar: {height: 50},
   modalButtons: {
     flexDirection: 'row',
   },

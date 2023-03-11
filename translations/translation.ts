@@ -27,6 +27,7 @@ const LANGUAGE_DETECTOR: LanguageDetectorAsyncModule = {
         const findBestAvailableLanguage =
           RNLocalize.findBestAvailableLanguage(language_codes);
 
+        console.log(findBestAvailableLanguage);
         callback(findBestAvailableLanguage!.languageTag || 'en');
         return;
       }

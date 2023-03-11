@@ -1,5 +1,5 @@
 import React, {FC, useState} from 'react';
-import {StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import {Appbar, Searchbar, Text} from 'react-native-paper';
 import {Container} from '../../components/Container';
 import {useToggle} from '../../hooks/useToggle';
@@ -18,19 +18,29 @@ export const LanguageSettings: FC<SettingsStackScreenP<'Language'>> = ({
   const [search, setSearch] = useState('');
   const {t, i18n} = useTranslation();
   const {state: isSearching, toggle: toggleIsSearching} = useToggle(false);
+
+  const languages = languageOptions.filter(option =>
+    option.label.includes(search),
+  );
+
   const changeSearch = (s: string) => setSearch(s);
   const stopSearching = () => {
     setSearch('');
     toggleIsSearching();
   };
+
   return (
     <Container>
       <Appbar.Header>
-        {!isSearching && <Appbar.BackAction onPress={navigation.goBack} />}
-        {!isSearching && <Appbar.Content title={t('language')} />}
+        {!isSearching && (
+          <>
+            <Appbar.BackAction onPress={navigation.goBack} />
+            <Appbar.Content title={t('language')} />
+          </>
+        )}
         {isSearching && (
           <Searchbar
-            placeholder="Search"
+            placeholder={t('search')!}
             value={search}
             onChangeText={changeSearch}
             style={styles.Searchbar}
@@ -40,7 +50,7 @@ export const LanguageSettings: FC<SettingsStackScreenP<'Language'>> = ({
         {<Appbar.Action icon="magnify" onPress={toggleIsSearching} />}
       </Appbar.Header>
       <View style={styles.List}>
-        {languageOptions.map(({code, label}) => (
+        {languages.map(({code, label}) => (
           <Text
             variant="headlineSmall"
             style={styles.Text}

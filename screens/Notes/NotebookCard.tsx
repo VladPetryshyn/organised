@@ -3,10 +3,11 @@ import React, {FC, useState} from 'react';
 import {StyleSheet, TouchableOpacity} from 'react-native';
 import {Card, Title, useTheme} from 'react-native-paper';
 import {DrawerParamList} from '../types';
+import {borderRadius} from '../../constants';
 
 interface Props {
   name: string;
-  navigation: StackNavigationProp<DrawerParamList, 'Notebooks'>;
+  navigation: StackNavigationProp<DrawerParamList, 'DrawerNotebooks'>;
   selectedNotebooks?: Array<string>;
   setSelectedNotebooks?: React.Dispatch<React.SetStateAction<string[]>>;
   isInSearch?: boolean;
@@ -63,5 +64,6 @@ export const NotebookCard: FC<Props> = ({
 const styles = StyleSheet.create({
   notebook: {
     marginTop: 10,
+    borderRadius,
   },
 });

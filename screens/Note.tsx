@@ -10,6 +10,7 @@ import {jsonToOrg, Note as NoteT} from 'org2json';
 import RNFetchBlob from 'rn-fetch-blob';
 import {directorySelector} from '../redux/directoryReducer';
 import deepClone from 'lodash.clonedeep';
+import {useTranslation} from 'react-i18next';
 
 export const Note: FC<NotesStackScreenP<'Note'>> = ({navigation, route}) => {
   const {notebook, ids, isCreating} = route.params;
@@ -22,13 +23,7 @@ export const Note: FC<NotesStackScreenP<'Note'>> = ({navigation, route}) => {
   const noteData = useSelector(
     noteSelector(notebook && ids ? {notebook, ids} : undefined),
   );
-
-  useEffect(() => {
-    if (noteData && !isCreating) {
-      setTitle(noteData.title);
-      setDescription(noteData.description);
-    }
-  }, [noteData]);
+  const {t} = useTranslation();
 
   const createNote = async () => {
     const newNote = {
@@ -80,14 +75,16 @@ export const Note: FC<NotesStackScreenP<'Note'>> = ({navigation, route}) => {
       const updater = (it: NoteT) => {
         if (localIds.length === 1) {
           const id = localIds.shift();
-          it.items = it.items.map(t =>
-            t.properties.id === id ? updatedNote : t,
+          it.items = it.items.map(item =>
+            item.properties.id === id ? updatedNote : item,
           );
           return it;
         }
 
         const id = localIds.shift();
-        it.items = it.items.map(t => (t.properties.id === id ? updater(t) : t));
+        it.items = it.items.map(item =>
+          item.properties.id === id ? updater(item) : item,
+        );
 
         return it;
       };
@@ -100,6 +97,13 @@ export const Note: FC<NotesStackScreenP<'Note'>> = ({navigation, route}) => {
     }
   };
 
+  useEffect(() => {
+    if (noteData && !isCreating) {
+      setTitle(noteData.title);
+      setDescription(noteData.description);
+    }
+  }, [noteData]);
+
   return (
     <Container>
       <ScrollView>
@@ -109,11 +113,10 @@ export const Note: FC<NotesStackScreenP<'Note'>> = ({navigation, route}) => {
           <Appbar.Action
             icon="check"
             onPress={!isCreating && ids ? updateNote : createNote}
-            style={{backgroundColor: 'red'}}
           />
         </Appbar.Header>
         <TextInput
-          placeholder="Title"
+          placeholder={t('title')!}
           autoCapitalize="sentences"
           style={[styles.title, {color}]}
           placeholderTextColor={color}
@@ -122,7 +125,7 @@ export const Note: FC<NotesStackScreenP<'Note'>> = ({navigation, route}) => {
           onChangeText={setTitle}
         />
         <TextInput
-          placeholder="Description"
+          placeholder={t('description')!}
           autoCapitalize="sentences"
           style={[styles.description, {color}]}
           placeholderTextColor={color}
@@ -132,9 +135,6 @@ export const Note: FC<NotesStackScreenP<'Note'>> = ({navigation, route}) => {
           onChangeText={setDescription}
         />
       </ScrollView>
-      <Appbar>
-        <Appbar.Action icon="plus-box-outline" />
-      </Appbar>
     </Container>
   );
 };

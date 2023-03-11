@@ -34,12 +34,6 @@ export const Settings: FC<SettingsStackScreenP<'Settings'>> = ({
           left={props => <List.Icon {...props} icon="translate" />}
         />
       </TouchableOpacity>
-      <TouchableOpacity>
-        <List.Item
-          title={t('info')}
-          left={props => <List.Icon {...props} icon="information-outline" />}
-        />
-      </TouchableOpacity>
     </Container>
   );
 };

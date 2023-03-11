@@ -7,6 +7,7 @@ import {useDispatch} from 'react-redux';
 import {addNotebook} from '../../redux/tasksReducer';
 import {useSelector} from '../../hooks/useSelector';
 import {directorySelector} from '../../redux/directoryReducer';
+import {useTranslation} from 'react-i18next';
 
 interface Props {
   isVisible: boolean;
@@ -17,6 +18,7 @@ export const AddNoteModal: FC<Props> = ({isVisible, toggleIsVisible}) => {
   const [name, setName] = useState('');
   const dispatch = useDispatch();
   const directory = useSelector(directorySelector);
+  const {t} = useTranslation();
 
   const onClose = () => {
     toggleIsVisible();
@@ -38,18 +40,18 @@ export const AddNoteModal: FC<Props> = ({isVisible, toggleIsVisible}) => {
       contentContainerStyle={styles.modalContainer}>
       <View style={styles.modalContent}>
         <Text style={styles.modalTitle} variant="titleLarge">
-          New notebook name
+          {t('new_notebook_name')}
         </Text>
         <TextInput
           mode="outlined"
-          label="Name"
+          label={t('name')!}
           style={styles.modalInput}
           value={name}
           onChangeText={setName}
         />
         <View style={styles.modalButtons}>
           <Button mode="text" style={styles.modalCancel} onPress={onClose}>
-            Cancel
+            {t('cancel')}
           </Button>
           <Button mode="text" style={styles.modalSubmit} onPress={onSubmit}>
             OK

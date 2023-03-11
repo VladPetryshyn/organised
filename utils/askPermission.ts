@@ -1,4 +1,4 @@
-import {Linking, PermissionsAndroid} from 'react-native';
+import {PermissionsAndroid} from 'react-native';
 
 export const checkPermissions = async () => {
   return (

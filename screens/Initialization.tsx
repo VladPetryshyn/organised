@@ -1,106 +1,78 @@
-import React, {FC, useEffect, useRef, useState} from 'react';
+import React, {FC, useEffect, useState} from 'react';
 import {Container} from '../components/Container';
-import {StyleSheet, View, BackHandler, AppState} from 'react-native';
-import {ActivityIndicator, Button, Portal, Text} from 'react-native-paper';
+import {StyleSheet, BackHandler} from 'react-native';
+import {
+  ActivityIndicator,
+  Button,
+  Dialog,
+  Portal,
+  Text,
+} from 'react-native-paper';
 import DocumentPicker from 'react-native-document-picker';
-import {checkPermissions, requestPermissions} from '../utils/askPermission';
 import {StackScreenP} from './types';
 import {useDispatch} from '../hooks/useDispatch';
-import {changeDirectory} from '../utils/changeDirectory';
-import {getHashes} from '../utils/getHashes';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import {initializeTasks} from '../redux/tasksReducer';
 import {getFiles} from '../utils/getFiles';
 import {decodeUriToDir} from '../utils/decodeUriToDir';
-import {CustomModal} from '../components/Modal';
-import allFilesAccessRequest from '../native/allFilesAccessRequest';
 import {useToggle} from '../hooks/useToggle';
+import {setDirectoryAC} from '../redux/directoryReducer';
+import ManageExternalStorage from '../native/allFilesRequester';
+import {LoadingIndicator} from '../components/Loading';
+import {useTranslation} from 'react-i18next';
 
 export const Initialization: FC<StackScreenP<'Initialization'>> = () => {
   // hooks
-  const [isModalVisible, setIsModalVisible] = useState(true);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const {state: isLoading, toggle: toggleIsLoading} = useToggle(false);
-  const appState = useRef(AppState.currentState);
   const dispatch = useDispatch();
+  const {t} = useTranslation();
 
   // functions
   const pick = async () => {
-    const dir = decodeUriToDir((await DocumentPicker.pickDirectory())!.uri);
+    const dir = decodeUriToDir(
+      (await DocumentPicker.pickDirectory())?.uri ?? '',
+    );
+    if (dir) {
+      toggleIsLoading();
+      const {notesData} = await getFiles(dir);
+      dispatch(initializeTasks(notesData));
 
-    toggleIsLoading();
-    const hashes = await getHashes(dir);
-    await AsyncStorage.setItem('hashes', JSON.stringify(hashes));
-
-    const {notesData} = await getFiles(dir);
-    await AsyncStorage.setItem('notes', JSON.stringify(notesData));
-    dispatch(initializeTasks(notesData));
-
-    await changeDirectory(dispatch)(dir);
-    toggleIsLoading();
+      dispatch(setDirectoryAC(dir));
+      toggleIsLoading();
+    }
+  };
+  const allowAllFilesAccess = () => {
+    ManageExternalStorage.checkAndGrantPermission(
+      _ => {},
+      _ => {},
+    );
+    ManageExternalStorage.checkPermission(res => setIsModalVisible(res));
   };
 
   // effects
   useEffect(() => {
-    const check = async () => {
-      setIsModalVisible(!(await checkPermissions()));
-    };
-    check();
-  }, []);
-  useEffect(() => {
-    const subscription = AppState.addEventListener(
-      'change',
-      async nextAppState => {
-        if (
-          appState.current.match(/inactive|background/) &&
-          nextAppState === 'active'
-        ) {
-          setIsModalVisible(!(await requestPermissions()));
-        }
-
-        appState.current = nextAppState;
-      },
-    );
-
-    return () => {
-      subscription.remove();
-    };
+    ManageExternalStorage.checkPermission(res => setIsModalVisible(!res));
   }, []);
 
-  return (
+  return isLoading ? (
+    <LoadingIndicator />
+  ) : (
     <Container style={styles.container}>
-      {isLoading ? (
-        <ActivityIndicator animating={true} size="large" />
-      ) : (
-        <>
-          <Text variant="titleLarge" style={styles.text}>
-            Please select folder with your org files.
-          </Text>
-          <Button mode="outlined" onPress={pick}>
-            Select notes folder
-          </Button>
-          <Portal>
-            <CustomModal
-              visible={isModalVisible}
-              contentContainerStyle={styles.modalContainer}>
-              <Text variant="titleLarge">
-                Organised can't work without storage access
-              </Text>
-              <View style={styles.modalButtons}>
-                <Button
-                  style={styles.modalCancel}
-                  onPress={BackHandler.exitApp}>
-                  Cancel
-                </Button>
-                <Button
-                  style={styles.modalButton}
-                  onPress={allFilesAccessRequest.openAllFilesPermission}>
-                  OK
-                </Button>
-              </View>
-            </CustomModal>
-          </Portal>
-        </>
-      )}
+      <Text variant="titleLarge" style={styles.text}>
+        {t('select_folder')}
+      </Text>
+      <Button mode="outlined" onPress={pick}>
+        {t('select_folder_btn')}
+      </Button>
+      <Portal>
+        <Dialog visible={isModalVisible}>
+          <Dialog.Title>{t('storage_access')}</Dialog.Title>
+          <Dialog.Actions>
+            <Button onPress={BackHandler.exitApp}>{t('cancel')}</Button>
+            <Button onPress={allowAllFilesAccess}>OK</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </Container>
   );
 };
@@ -115,18 +87,5 @@ const styles = StyleSheet.create({
     marginTop: 15,
     marginBottom: 25,
     textAlign: 'center',
-  },
-  modalButton: {
-    marginLeft: 10,
-  },
-  modalCancel: {
-    marginLeft: 'auto',
-  },
-  modalButtons: {
-    flexDirection: 'row',
-    marginTop: 22,
-  },
-  modalContainer: {
-    width: 400,
   },
 });

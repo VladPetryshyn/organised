@@ -1,7 +1,9 @@
 import {configureStore} from '@reduxjs/toolkit';
-import directoryReducer from './directoryReducer';
+import directoryReducer, {
+  directoryListenerMiddleware,
+} from './directoryReducer';
 import tasksReducer from './tasksReducer';
-import themeReducer from './themeReducer';
+import themeReducer, {themeListenerMiddleware} from './themeReducer';
 
 export const store = configureStore({
   reducer: {
@@ -9,6 +11,10 @@ export const store = configureStore({
     tasksReducer,
     themeReducer,
   },
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware()
+      .prepend(themeListenerMiddleware.middleware)
+      .prepend(directoryListenerMiddleware.middleware),
 });
 
 export type RootState = ReturnType<typeof store.getState>;

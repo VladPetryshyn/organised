@@ -6,22 +6,14 @@ import watcher from './native/watcher';
 import {EmitterSubscription, NativeEventEmitter} from 'react-native';
 import {StackParamList} from './screens/types';
 import {useSelector} from './hooks/useSelector';
-import {directorySelector, setDirectory} from './redux/directoryReducer';
+import {directorySelector, setDirectoryAC} from './redux/directoryReducer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useDispatch} from './hooks/useDispatch';
-import {getHashes} from './utils/getHashes';
-import {getUpdatedData} from './utils/getUpdatedData';
-import {
-  updateNotebooks,
-  initializeTasks,
-  changeNote,
-} from './redux/tasksReducer';
-import {ActivityIndicator} from 'react-native-paper';
+import {updateNotebooks, initializeTasks} from './redux/tasksReducer';
+import {getFiles} from './utils/getFiles';
+import ManageExternalStorage from './native/allFilesRequester';
+import {LoadingIndicator} from './components/Loading';
 import {getFile} from './utils/getFile';
-import {LogBox} from 'react-native';
-import {checkPermissions} from './utils/askPermission';
-
-LogBox.ignoreLogs(['react-i18next', "Looks like you're", 'Require cycle']);
 
 const Stack = createStackNavigator<StackParamList>();
 
@@ -29,35 +21,28 @@ function App() {
   const directory = useSelector(directorySelector);
   const dispatch = useDispatch();
   const [isLoading, setIsLoading] = useState(true);
+  const [isAllFilesAccessPermitted, setIsAllFilesAccessPermitted] =
+    useState<boolean>();
 
   useEffect(() => {
     const getData = async () => {
       const dir = await AsyncStorage.getItem('directory');
-      const oldHashes = JSON.parse(
-        (await AsyncStorage.getItem('hashes')) ?? '{}',
-      );
-      const notebooksData = JSON.parse(
-        (await AsyncStorage.getItem('notes')) ?? '{}',
-      );
-      if (dir && (await checkPermissions())) {
-        dispatch(setDirectory(dir));
-        const newHashes = await getHashes(dir);
+      ManageExternalStorage.checkPermission(setIsAllFilesAccessPermitted);
 
-        dispatch(initializeTasks(notebooksData));
-        const filtredHashes = Object.keys(newHashes).filter(
-          notebook => oldHashes[notebook] !== newHashes[notebook],
-        );
+      if (dir && isAllFilesAccessPermitted) {
+        dispatch(setDirectoryAC(dir));
+        const {notesData} = await getFiles(dir);
 
-        if (filtredHashes.length > 0) {
-          const {noteData} = await getUpdatedData(dir, Object.keys(oldHashes));
-          dispatch(changeNote({data: noteData, action: updateNotebooks}));
-        }
+        dispatch(initializeTasks(notesData));
       }
 
-      setIsLoading(false);
+      if (isAllFilesAccessPermitted !== undefined) {
+        setIsLoading(false);
+      }
     };
     getData();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isAllFilesAccessPermitted]);
 
   useEffect(() => {
     let eventListener: EmitterSubscription;
@@ -70,8 +55,7 @@ function App() {
         const {notes} = await getFile(`${directory}/${name}.org`);
         const data = {[name]: notes};
 
-        console.log('updating motehrfucker');
-        dispatch(changeNote({data, action: updateNotebooks}));
+        dispatch(updateNotebooks(data));
       });
     }
     return () => {
@@ -79,10 +63,11 @@ function App() {
         eventListener.remove();
       }
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [directory]);
 
   return isLoading ? (
-    <ActivityIndicator animating={true} size="large" />
+    <LoadingIndicator />
   ) : (
     <Stack.Navigator
       initialRouteName="Initialization"

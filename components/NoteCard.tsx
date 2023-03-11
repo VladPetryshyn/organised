@@ -1,6 +1,12 @@
 import {Note} from 'org2json';
 import React, {Dispatch, FC, SetStateAction, useState} from 'react';
-import {FlatList, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewStyle,
+} from 'react-native';
 import Autolink from 'react-native-autolink';
 import {
   Card,
@@ -10,14 +16,11 @@ import {
   Title,
   useTheme,
 } from 'react-native-paper';
-import {
-  DrawerParamList,
-  NoteParams,
-  NotesStackParamList,
-} from '../screens/types';
+import {NoteParams, NotesStackParamList} from '../screens/types';
 import {compareArrays} from '../utils/compareArrays';
+import {borderRadius} from '../constants';
 
-interface Props extends Note {
+interface DefaultProps extends Note {
   ids: Array<string>;
   notebook: string;
   navigate: (screen: keyof NotesStackParamList, args: NoteParams) => void;
@@ -26,25 +29,19 @@ interface Props extends Note {
   isInSearch?: boolean;
 }
 
-export const NoteCard: FC<Props> = ({
-  title,
-  state,
-  tags,
-  description,
-  items,
+export const NoteCardDefault: FC<DefaultProps> = ({
   ids,
   notebook,
   navigate,
   setSelectedNotes,
   selectedNotes,
   isInSearch,
+  ...props
 }) => {
-  const isInSelectionMode = selectedNotes!.length > 0;
   const [isSelected, setIsSelected] = useState(false);
-  const goToNote = () => {
-    navigate('Note', {ids, notebook, isCreating: false});
-  };
   const theme = useTheme();
+  const isInSelectionMode = selectedNotes!.length > 0;
+
   const selectNote = () => {
     if (!isInSearch) {
       if (!isSelected) {
@@ -58,19 +55,63 @@ export const NoteCard: FC<Props> = ({
       }
     }
   };
+
+  const cardStyles = {
+    backgroundColor:
+      isSelected && isInSelectionMode
+        ? theme.colors.primary
+        : theme.colors.background,
+  };
+
+  return (
+    <NoteCard
+      cardStyles={cardStyles}
+      isInSelectionMode={isInSelectionMode}
+      selectNote={selectNote}
+      ids={ids}
+      notebook={notebook}
+      navigate={navigate}
+      selectedNotes={selectedNotes}
+      setSelectedNotes={setSelectedNotes}
+      {...props}
+    />
+  );
+};
+
+interface Props extends DefaultProps {
+  isInSelectionMode?: boolean;
+  selectNote?: () => void;
+  cardStyles?: ViewStyle;
+}
+
+export const NoteCard: FC<Props> = ({
+  selectNote,
+  isInSelectionMode,
+  cardStyles,
+  state,
+  title,
+  description,
+  tags,
+  items,
+  notebook,
+  ids,
+  selectedNotes,
+  setSelectedNotes,
+  navigate,
+}) => {
+  const goToNote = () => {
+    navigate('Note', {ids, notebook, isCreating: false});
+  };
+  const theme = useTheme();
   return (
     <TouchableOpacity
-      onPress={isInSelectionMode ? selectNote : goToNote}
+      onPress={isInSelectionMode && selectNote ? selectNote : goToNote}
       onLongPress={selectNote}>
       <Card
         style={[
+          {backgroundColor: theme.colors.background},
           styles.notebook,
-          {
-            backgroundColor:
-              isSelected && selectedNotes?.length > 0
-                ? theme.colors.primary
-                : theme.colors.background,
-          },
+          cardStyles,
         ]}>
         <Card.Content>
           <View style={styles.title}>
@@ -93,7 +134,7 @@ export const NoteCard: FC<Props> = ({
           <FlatList
             data={items}
             renderItem={({item}) => (
-              <NoteCard
+              <NoteCardDefault
                 {...item}
                 ids={[...ids, item.properties.id]}
                 notebook={notebook}
@@ -103,7 +144,7 @@ export const NoteCard: FC<Props> = ({
               />
             )}
             keyExtractor={({properties}) => properties.id}
-            initialNumToRender={2}
+            initialNumToRender={3}
           />
         </Card.Content>
       </Card>
@@ -114,8 +155,7 @@ export const NoteCard: FC<Props> = ({
 const styles = StyleSheet.create({
   notebook: {
     marginTop: 10,
-    borderWidth: 1,
-    borderColor: 'white',
+    borderRadius,
   },
   container: {
     padding: 15,

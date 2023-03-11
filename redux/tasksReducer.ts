@@ -1,12 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  ActionCreatorWithPayload,
-  createAsyncThunk,
-  createSlice,
-  PayloadAction,
-} from '@reduxjs/toolkit';
+import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import {jsonToOrg, Note, Notes} from 'org2json';
-import {getHashes} from '../utils/getHashes';
 import {DirectoryState} from './directoryReducer';
 import {RootState} from './mainReducer';
 import cloneDeep from 'lodash.clonedeep';
@@ -21,37 +14,10 @@ interface initialState {
   history: Array<tasksReducerData>;
 }
 
-interface changeNotePayload {
-  data: tasksReducerData;
-  action: ActionCreatorWithPayload<any, string>;
-}
-
 interface getStateDataI {
   tasksReducer: initialState;
   directoryReducer: DirectoryState;
 }
-
-export const changeNote = createAsyncThunk(
-  '',
-  async (payload: changeNotePayload, thunkAPI) => {
-    const {dispatch, getState} = thunkAPI;
-    const {
-      tasksReducer,
-      directoryReducer: {directory},
-    } = getState() as getStateDataI;
-    const {action, data} = payload;
-
-    await AsyncStorage.setItem(
-      'notes',
-      JSON.stringify({...tasksReducer.data, ...data}),
-    );
-    await AsyncStorage.setItem(
-      'hashes',
-      JSON.stringify(await getHashes(directory)),
-    );
-    dispatch(action(data));
-  },
-);
 
 export const deleteNotebook = createAsyncThunk(
   '',
@@ -96,7 +62,7 @@ export const deleteNotes = createAsyncThunk(
     }
 
     for (const ids of idsArray) {
-      remove(clonedData, ids);
+      remove(clonedData as any, ids);
     }
 
     dispatch(deleteNotesAC({notebook, data: clonedData.items}));
@@ -140,7 +106,7 @@ export const checkNotes = createAsyncThunk(
 
         return note;
       };
-      checker(newNotebook);
+      checker(newNotebook as any);
     });
 
     dispatch(removeTask({name: notebook, notes: newNotebook.items}));

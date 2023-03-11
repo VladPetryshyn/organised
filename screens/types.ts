@@ -10,7 +10,7 @@ export type NoteParams = {
 // Drawer
 export type DrawerParamList = {
   Settings: undefined;
-  DrawerNotebooks: undefined;
+  DrawerNotebooks: StackScreenProps<NotesStackParamList>;
 };
 
 export type DrawerScreenP<N extends keyof DrawerParamList> = DrawerScreenProps<

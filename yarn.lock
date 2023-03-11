@@ -1110,7 +1110,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@callstack/react-theme-provider@npm:^3.0.7":
+"@callstack/react-theme-provider@npm:^3.0.8":
   version: 3.0.8
   resolution: "@callstack/react-theme-provider@npm:3.0.8"
   dependencies:
@@ -2209,6 +2209,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/react-native-fs@npm:^2.13.0":
+  version: 2.13.0
+  resolution: "@types/react-native-fs@npm:2.13.0"
+  dependencies:
+    react-native-fs: "*"
+  checksum: 4a3fd0c777e0accba157ae240c59e3a9dc744692a07f41d64f6962695c2538e3fe4760709965261a6ebd168639e69aa8cdf257ef818f18df74615b79142efe73
+  languageName: node
+  linkType: hard
+
 "@types/react-native@npm:^0.69.3":
   version: 0.69.15
   resolution: "@types/react-native@npm:0.69.15"
@@ -3119,7 +3128,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"base-64@npm:0.1.0":
+"base-64@npm:0.1.0, base-64@npm:^0.1.0":
   version: 0.1.0
   resolution: "base-64@npm:0.1.0"
   checksum: 5a42938f82372ab5392cbacc85a5a78115cbbd9dbef9f7540fa47d78763a3a8bd7d598475f0d92341f66285afd377509851a9bb5c67bbecb89686e9255d5b3eb
@@ -8548,6 +8557,7 @@ __metadata:
     "@tsconfig/react-native": ^2.0.2
     "@types/jest": ^26.0.23
     "@types/react-native": ^0.69.3
+    "@types/react-native-fs": ^2.13.0
     "@types/react-test-renderer": ^18.0.0
     "@typescript-eslint/eslint-plugin": ^5.29.0
     "@typescript-eslint/parser": ^5.29.0
@@ -8566,10 +8576,11 @@ __metadata:
     react-native-autolink: ^4.0.0
     react-native-document-picker: ^8.1.1
     react-native-draggable-flatlist: ^3.1.2
+    react-native-fs: ^2.20.0
     react-native-gesture-handler: ^2.5.0
     react-native-get-random-values: ^1.8.0
     react-native-localize: ^2.2.4
-    react-native-paper: 5.0.0-rc.4
+    react-native-paper: ^5.2.0
     react-native-reanimated: ^2.9.1
     react-native-safe-area-context: ^4.3.3
     react-native-screens: ^3.17.0
@@ -9215,6 +9226,22 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-native-fs@npm:*, react-native-fs@npm:^2.20.0":
+  version: 2.20.0
+  resolution: "react-native-fs@npm:2.20.0"
+  dependencies:
+    base-64: ^0.1.0
+    utf8: ^3.0.0
+  peerDependencies:
+    react-native: "*"
+    react-native-windows: "*"
+  peerDependenciesMeta:
+    react-native-windows:
+      optional: true
+  checksum: 0be9bb9a5c13b501d0a3006efc3aa5c0b5b211456ee04718297f4e522532f3527f1daa220bd67d3b82d819ed8fdab8f64b7d6e0d7b768c1fd1d8ec9122d94316
+  languageName: node
+  linkType: hard
+
 "react-native-gesture-handler@npm:^2.5.0":
   version: 2.8.0
   resolution: "react-native-gesture-handler@npm:2.8.0"
@@ -9249,7 +9276,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-iphone-x-helper@npm:^1.3.0, react-native-iphone-x-helper@npm:^1.3.1":
+"react-native-iphone-x-helper@npm:^1.3.0":
   version: 1.3.1
   resolution: "react-native-iphone-x-helper@npm:1.3.1"
   peerDependencies:
@@ -9275,18 +9302,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-paper@npm:5.0.0-rc.4":
-  version: 5.0.0-rc.4
-  resolution: "react-native-paper@npm:5.0.0-rc.4"
+"react-native-paper@npm:^5.2.0":
+  version: 5.2.0
+  resolution: "react-native-paper@npm:5.2.0"
   dependencies:
-    "@callstack/react-theme-provider": ^3.0.7
+    "@callstack/react-theme-provider": ^3.0.8
     color: ^3.1.2
-    react-native-iphone-x-helper: ^1.3.1
+    use-event-callback: ^0.1.0
   peerDependencies:
     react: "*"
     react-native: "*"
+    react-native-safe-area-context: "*"
     react-native-vector-icons: "*"
-  checksum: d634d3ee37007e593d2d7c75918e4d80fe877c5671c4302778412092e2051b7f0505c0251a5cc7cc910fe6c3462853b285a46c4e3e08ca1bad5030d255668d03
+  checksum: bf5e6eecde852719d74713757e678fe576f32b92509ed5417f35fafb3bb4ea0fae0ce0bd6df7d61f38acd191bd1f36c1c6a5572b6f3d05944bd0b2d54f1a18e8
   languageName: node
   linkType: hard
 
@@ -11263,6 +11291,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"use-event-callback@npm:^0.1.0":
+  version: 0.1.0
+  resolution: "use-event-callback@npm:0.1.0"
+  peerDependencies:
+    react: ">=16.8"
+  checksum: 1e15fb21306c74f877e9d57686546c363165429412dcb9260254d2dd8f56692cb01ba2162f9169e6fc15b01cf3921b9cd8a9c60cf777d0143afcee92c1a7976a
+  languageName: node
+  linkType: hard
+
 "use-latest-callback@npm:^0.1.5":
   version: 0.1.5
   resolution: "use-latest-callback@npm:0.1.5"
@@ -11283,6 +11320,13 @@ __metadata:
   version: 3.1.1
   resolution: "use@npm:3.1.1"
   checksum: 08a130289f5238fcbf8f59a18951286a6e660d17acccc9d58d9b69dfa0ee19aa038e8f95721b00b432c36d1629a9e32a464bf2e7e0ae6a244c42ddb30bdd8b33
+  languageName: node
+  linkType: hard
+
+"utf8@npm:^3.0.0":
+  version: 3.0.0
+  resolution: "utf8@npm:3.0.0"
+  checksum: cb89a69ad9ab393e3eae9b25305b3ff08bebca9adc839191a34f90777eb2942f86a96369d2839925fea58f8f722f7e27031d697f10f5f39690f8c5047303e62d
   languageName: node
   linkType: hard
 

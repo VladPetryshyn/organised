@@ -21,7 +21,7 @@ public class MyAppPackage implements ReactPackage {
         List<NativeModule> modules = new ArrayList<>();
 
         modules.add(new ObserverModule(reactContext));
-        modules.add(new AllFilesAccessModule((reactContext)));
+        modules.add(new PermissionFileModule(reactContext));
 
         return modules;
     }

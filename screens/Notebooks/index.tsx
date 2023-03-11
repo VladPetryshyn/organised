@@ -1,14 +1,14 @@
-import React from 'react';
+import React, {FC} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import {Notes} from '../Notes';
 import {Notebook} from '../Notebook';
-import {NotesStackParamList} from '../types';
+import {DrawerScreenP, NotesStackParamList} from '../types';
 import {Search} from '../Search';
 import {Note} from '../Note';
 
 const Stack = createStackNavigator<NotesStackParamList>();
 
-export const Notebooks = () => {
+export const Notebooks: FC<DrawerScreenP<'DrawerNotebooks'>> = () => {
   return (
     <Stack.Navigator
       screenOptions={{headerShown: false}}

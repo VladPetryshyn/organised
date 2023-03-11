@@ -1,7 +1,8 @@
 import React from 'react';
 import {FC} from 'react';
 import {StyleSheet} from 'react-native';
-import {Modal, ModalProps, useTheme} from 'react-native-paper';
+import {Modal, ModalProps, Portal, useTheme} from 'react-native-paper';
+import {borderRadius} from '../constants';
 
 export const CustomModal: FC<ModalProps> = ({
   children,
@@ -10,15 +11,17 @@ export const CustomModal: FC<ModalProps> = ({
 }) => {
   const {colors} = useTheme();
   return (
-    <Modal
-      {...props}
-      contentContainerStyle={[
-        styles.modalContainer,
-        {backgroundColor: colors.surface},
-        contentContainerStyle,
-      ]}>
-      {children}
-    </Modal>
+    <Portal>
+      <Modal
+        {...props}
+        contentContainerStyle={[
+          styles.modalContainer,
+          {backgroundColor: colors.surface},
+          contentContainerStyle,
+        ]}>
+        {children}
+      </Modal>
+    </Portal>
   );
 };
 
@@ -26,7 +29,7 @@ const styles = StyleSheet.create({
   modalContainer: {
     marginLeft: 'auto',
     marginRight: 'auto',
-    borderRadius: 10,
+    borderRadius,
     padding: 15,
     maxWidth: 350,
   },
